@@ -25,11 +25,11 @@ you can just use it like this
 ## Supported browsers ##
 
 I have tested this new feature (custom filename) with following browsers:
--Opera 12.16 1860 NOK
--Google Chrome 34.0.1847.132 OK
--Mozilla Firefox 29.0 OK
+- Opera 12.16 1860 NOK
+- Google Chrome 34.0.1847.132 OK
+- Mozilla Firefox 29.0 OK
 
 More (IE) will be tested soon.
 
--NOK => everything seems to be working but saved with browser default filename
--OK => everything seems to be working fine
+- NOK => everything seems to be working but saved with browser default filename
+- OK => everything seems to be working fine
