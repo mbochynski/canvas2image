@@ -43,8 +43,26 @@ var Canvas2Image = function () {
 		return canvas.toDataURL(type);
 	}
 
-	function saveFile (strData) {
-		document.location.href = strData;
+
+	function saveFile(uri, name) {
+		function eventFire(el, etype){
+			if (el.fireEvent) {
+				(el.fireEvent('on' + etype));
+			} else {
+				var evObj = document.createEvent('Events');
+				evObj.initEvent(etype, true, false);
+				el.dispatchEvent(evObj);
+			}
+		}
+		var link = document.createElement("a");
+		link.download = name;
+		link.href = uri;
+//		eventFire(link, "click");
+		var body = document.getElementsByTagName('body')[0];
+
+		body.appendChild(link);
+		link.click();
+		body.removeChild(link);
 	}
 
 	function genImage(strData) {
@@ -76,7 +94,7 @@ var Canvas2Image = function () {
 		return canvas.getContext('2d').getImageData(0, 0, w, h);
 	}
 	function makeURI (strData, type) {
-		return 'data:' + type + ';base64,' + strData;
+		return 'data:' + type + ';base64;content-disposition=attachment,' + strData;
 	}
 
 
@@ -195,18 +213,24 @@ var Canvas2Image = function () {
 	 * @param {String} image type
 	 * @param {Number} [optional] png width
 	 * @param {Number} [optional] png height
+	 * @param {String} [optional] base filename without extension
 	 */
-	var saveAsImage = function (canvas, width, height, type) {
+	var saveAsImage = function (canvas, width, height, type, filename) {
 		if ($support.canvas && $support.dataURL) {
 			if (type == undefined) { type = 'png'; }
+			if (filename == undefined) {
+				filename = 'default.' + type;
+			} else {
+				filename += '.' + type;
+			}
 			type = fixType(type);
 			if (/bmp/.test(type)) {
 				var data = getImageData(scaleCanvas(canvas, width, height));
 				var strData = genBitmapImage(data);
-				saveFile(makeURI(strData, downloadMime));
+				saveFile(makeURI(strData, downloadMime), filename);
 			} else {
 				var strData = getDataURL(canvas, type, width, height);
-				saveFile(strData.replace(type, downloadMime));
+				saveFile(strData.replace(type, downloadMime), filename);
 			}
 		
 		}
@@ -232,17 +256,17 @@ var Canvas2Image = function () {
 
 	return {
 		saveAsImage: saveAsImage,
-		saveAsPNG: function (canvas, width, height) {
-			return saveAsImage(canvas, width, height, 'png');
+		saveAsPNG: function (canvas, width, height, filename) {
+			return saveAsImage(canvas, width, height, 'png', filename);
 		},
-		saveAsJPEG: function (canvas, width, height) {
-			return saveAsImage(canvas, width, height, 'jpeg');			
+		saveAsJPEG: function (canvas, width, height, filename) {
+			return saveAsImage(canvas, width, height, 'jpeg', filename);			
 		},
-		saveAsGIF: function (canvas, width, height) {
-			return saveAsImage(canvas, width, height, 'gif')		   
+		saveAsGIF: function (canvas, width, height, filename) {
+			return saveAsImage(canvas, width, height, 'gif', filename)		   
 		},
-		saveAsBMP: function (canvas, width, height) {
-			return saveAsImage(canvas, width, height, 'bmp');		   
+		saveAsBMP: function (canvas, width, height, filename) {
+			return saveAsImage(canvas, width, height, 'bmp', filename);		   
 		},
 		
 		convertToImage: convertToImage,
