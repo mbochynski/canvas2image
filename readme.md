@@ -4,7 +4,7 @@ with filename defined by you! No longer meaningless browser default
 filenames that may scare some people.
 
 ## Demo ##
-[canvas2image](http://mbochynski.github.com/proj/canvas2image/index.html)
+[canvas2image](http://mbochynski.github.io/canvas2image/index.html)
 
 ## Code ##
 you can just use it like this
