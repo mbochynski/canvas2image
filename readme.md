@@ -9,12 +9,14 @@ filenames that may scare some people.
 ## Code ##
 you can just use it like this
 		
-    Canvas2Image.saveAsImage(canvasObj, width, height, type, filename)
-    Canvas2Image.saveAsPNG(canvasObj, width, height, filename)
-    Canvas2Image.saveAsJPEG(canvasObj, width, height, filename)
-    Canvas2Image.saveAsGIF(canvasObj, width, height, filename)
-    Canvas2Image.saveAsBMP(canvasObj, width, height, filename)
-		filename should be a string without extension
+    Canvas2Image.saveAsImage(canvasObj, width, height, type, filename, background)
+    Canvas2Image.saveAsPNG(canvasObj, width, height, filename, background)
+    Canvas2Image.saveAsJPEG(canvasObj, width, height, filename, background)
+    Canvas2Image.saveAsGIF(canvasObj, width, height, filename, background)
+    Canvas2Image.saveAsBMP(canvasObj, width, height, filename, background)
+		- filename should be a string without extension
+		- background should be a boolean value - if the canvas before save should be 
+		filled with white backgound or not
     
     Canvas2Image.convertToImage(canvasObj, width, height, type)
     Canvas2Image.convertToPNG(canvasObj, widht, height)

@@ -20,7 +20,7 @@ var Canvas2Image = function () {
 
 	var downloadMime = 'image/octet-stream';
 
-	function scaleCanvas (canvas, width, height) {
+	function scaleCanvas (canvas, width, height, background) {
 		var w = canvas.width,
 			h = canvas.height;
 		if (width == undefined) {
@@ -29,17 +29,26 @@ var Canvas2Image = function () {
 		if (height == undefined) {
 			height = h;
 		}
-
+		
 		var retCanvas = document.createElement('canvas');
 		var retCtx = retCanvas.getContext('2d');
 		retCanvas.width = width;
 		retCanvas.height = height;
+		
+		if (background == undefined) {
+			background = false;
+		}
+		if (background === true){
+			retCtx.fillStyle = '#ffffff';
+			retCtx.fillRect(0,0, width, height);
+		}
+		
 		retCtx.drawImage(canvas, 0, 0, w, h, 0, 0, width, height);
 		return retCanvas;
 	}
 
-	function getDataURL (canvas, type, width, height) {
-		canvas = scaleCanvas(canvas, width, height);
+	function getDataURL (canvas, type, width, height, background) {
+		canvas = scaleCanvas(canvas, width, height, background);
 		return canvas.toDataURL(type);
 	}
 
@@ -214,8 +223,9 @@ var Canvas2Image = function () {
 	 * @param {Number} [optional] png width
 	 * @param {Number} [optional] png height
 	 * @param {String} [optional] base filename without extension
+	 * @param {Boolean} [optional] if canvas(saved image) should have white background
 	 */
-	var saveAsImage = function (canvas, width, height, type, filename) {
+	var saveAsImage = function (canvas, width, height, type, filename, background) {
 		if ($support.canvas && $support.dataURL) {
 			if (type == undefined) { type = 'png'; }
 			if (filename == undefined) {
@@ -225,11 +235,11 @@ var Canvas2Image = function () {
 			}
 			type = fixType(type);
 			if (/bmp/.test(type)) {
-				var data = getImageData(scaleCanvas(canvas, width, height));
+				var data = getImageData(scaleCanvas(canvas, width, height, background));
 				var strData = genBitmapImage(data);
 				saveFile(makeURI(strData, downloadMime), filename);
 			} else {
-				var strData = getDataURL(canvas, type, width, height);
+				var strData = getDataURL(canvas, type, width, height, background);
 				saveFile(strData.replace(type, downloadMime), filename);
 			}
 		
@@ -256,17 +266,17 @@ var Canvas2Image = function () {
 
 	return {
 		saveAsImage: saveAsImage,
-		saveAsPNG: function (canvas, width, height, filename) {
-			return saveAsImage(canvas, width, height, 'png', filename);
+		saveAsPNG: function (canvas, width, height, filename, background) {
+			return saveAsImage(canvas, width, height, 'png', filename, background);
 		},
-		saveAsJPEG: function (canvas, width, height, filename) {
-			return saveAsImage(canvas, width, height, 'jpeg', filename);			
+		saveAsJPEG: function (canvas, width, height, filename, background) {
+			return saveAsImage(canvas, width, height, 'jpeg', filename, background);
 		},
-		saveAsGIF: function (canvas, width, height, filename) {
-			return saveAsImage(canvas, width, height, 'gif', filename)		   
+		saveAsGIF: function (canvas, width, height, filename, background) {
+			return saveAsImage(canvas, width, height, 'gif', filename, background);
 		},
-		saveAsBMP: function (canvas, width, height, filename) {
-			return saveAsImage(canvas, width, height, 'bmp', filename);		   
+		saveAsBMP: function (canvas, width, height, filename, background) {
+			return saveAsImage(canvas, width, height, 'bmp', filename, background);
 		},
 		
 		convertToImage: convertToImage,
